@@ -1,0 +1,35 @@
+@{
+  Layout = "_Layout";
+}
+<div class="container-fluid">
+  <h2><em>Venue Entry Form</em></h2>
+  <br>
+  <div class="row text-left">
+    <div class="col-md-2">
+      <a class="btn btn-secondary" href="/">Return home</a>
+    </div>
+    <div class="col-md-2">
+      <a class="btn btn-secondary"href="/Bands">See all venues</a>
+    </div>
+  </div>
+<br>
+  <div class="row">
+    <div class="col-md-6">
+      <form class="form" action="/Venues/New" method="post">
+        <div class="form-group">
+          <label for="band-name">Venue name:</label>
+          <input class="form-control" type="text" name="band-name">
+        </div>
+        <div class="form-group">
+          <label for="band-genre">Venue address:</label>
+          <input class="form-control" type="text" name="band-genre">
+        </div>
+        <div class="form-group">
+          <label for="band-from">Venue hours:</label>
+          <input class="form-control" type="text" name="band-from">
+        </div>
+        <button class="btn btn-secondary"type="submit" name="button">Enter</button>
+      </form>
+    </div>
+  </div>
+</div>

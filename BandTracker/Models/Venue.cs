@@ -56,7 +56,13 @@ namespace BandTracker.Models
     {
       return _id;
     }
-    //handle assertion equation
+
+    // Create test override methods
+    public override int GetHashCode()
+    {
+      return this.GetVenueId().GetHashCode();
+    }
+
     public override bool Equals(System.Object otherVenue)
     {
       if (!(otherVenue is Venue))
@@ -66,13 +72,11 @@ namespace BandTracker.Models
       else
       {
         Venue newVenue = (Venue) otherVenue;
-        return this.GetVenueName().Equals(newVenue.GetVenueName());
+        bool nameEquality = (this.GetVenueName() == newVenue.GetVenueName());
+        bool addressEquality = (this.GetVenueAddress() == newVenue.GetVenueAddress());
+        bool hoursEquality = (this.GetVenueHours() == newVenue.GetVenueHours());
+        return (nameEquality && addressEquality && hoursEquality);
       }
-    }
-
-    public override int GetHashCode()
-    {
-         return this.GetVenueName().GetHashCode();
     }
 
     //Create method for 'venues' table
@@ -101,16 +105,38 @@ namespace BandTracker.Models
       cmd.ExecuteNonQuery();
       _id = (int) cmd.LastInsertedId;
       conn.Close();
-      if (conn != null)
+      if(conn != null)
       {
         conn.Dispose();
       }
     }
+
     //Create method for 'join' table
     public void AddBandsToVenues(Band newBand)
     {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"INSERT INTO venues_bands (venue_id, band_id) VALUES (@VenueId, @BandId);";
 
+      MySqlParameter band_id = new MySqlParameter();
+      band_id.ParameterName = "@BandId";
+      band_id.Value = newBand.GetBandId();
+      cmd.Parameters.Add(band_id);
+
+      MySqlParameter venue_id = new MySqlParameter();
+      venue_id.ParameterName = "@VenueId";
+      venue_id.Value = _id;
+      cmd.Parameters.Add(venue_id);
+
+      cmd.ExecuteNonQuery();
+      conn.Close();
+      if(conn != null)
+      {
+        conn.Dispose();
+      }
     }
+
     //Read method for 'venues' table, singular
     public static List<Venue> GetAllVenues()
     {
@@ -137,11 +163,43 @@ namespace BandTracker.Models
       }
       return allVenues;
     }
+
     //Read method for 'join' table
-    // public List<Band> GetBandsFromJoin()
-    // {
-    //
-    // }
+    public List<Band> GetBandsFromJoin()
+    {
+      MySqlConnection conn = DB.Connection();
+      conn.Open();
+      MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+      cmd.CommandText = @"SELECT bands.* FROM venues
+      JOIN venues_bands ON (venues.id = venues_bands.venue_id)
+      JOIN bands ON (venues_bands.band_id = bands.id)
+      WHERE venues.id = @VenueId;";
+
+      MySqlParameter id = new MySqlParameter();
+      id.ParameterName = "@VenueId";
+      id.Value = _id;
+      cmd.Parameters.Add(id);
+
+      MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+      List<Band> bands = new List<Band>{};
+      while(rdr.Read())
+      {
+        int band_id = rdr.GetInt32(0);
+        string band_name = rdr.GetString(1);
+        string band_genre = rdr.GetString(2);
+        string band_from = rdr.GetString(3);
+        Band newBand = new Band(band_name, band_genre, band_from, band_id);
+        bands.Add(newBand);
+      }
+
+      conn.Close();
+      if(conn != null)
+      {
+        conn.Dispose();
+      }
+      return bands;
+    }
+
     // Find method for 'venues' table
     public static Venue FindVenues(int venue_id)
     {
@@ -157,18 +215,18 @@ namespace BandTracker.Models
 
       MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
       int venueId = 0;
-      string venueName = "";
-      string venueAddress = "";
-      string venueHours = "";
+      string venue_name = "";
+      string venue_address = "";
+      string venue_hours = "";
 
       while(rdr.Read())
       {
         venueId = rdr.GetInt32(0);
-        venueName = rdr.GetString(1);
-        venueAddress = rdr.GetString(2);
-        venueHours = rdr.GetString(3);
+        venue_name = rdr.GetString(1);
+        venue_address = rdr.GetString(2);
+        venue_hours = rdr.GetString(3);
       }
-      Venue newVenue = new Venue (venueName, venueAddress, venueHours, venueId);
+      Venue newVenue = new Venue (venue_name, venue_address, venue_hours, venueId);
 
       conn.Close();
       if(conn != null)
@@ -225,10 +283,10 @@ namespace BandTracker.Models
       DELETE FROM venues_bands
       WHERE venue_id = @VenueId;";
 
-      MySqlParameter venueId = new MySqlParameter();
-      venueId.ParameterName = "@VenueId";
-      venueId.Value = this.GetVenueId();
-      cmd.Parameters.Add(venueId);
+      MySqlParameter venue_id = new MySqlParameter();
+      venue_id.ParameterName = "@VenueId";
+      venue_id.Value = this.GetVenueId();
+      cmd.Parameters.Add(venue_id);
 
       cmd.ExecuteNonQuery();
       conn.Close();

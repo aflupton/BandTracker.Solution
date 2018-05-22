@@ -1,0 +1,56 @@
+@{
+  Layout = "_Layout";
+}
+<div class="container-fluid">
+  <h2><em>Venues</em></h2>
+  <hr>
+  @if(Model.Count != 0)
+  {
+    <div class="">
+      <a href="/Venues/CreateForm">Create a new entry</a>
+      <a href="/">Home</a>
+    </div>
+    <ul class="list-group">
+      @foreach(var venue in Model["Venue"])
+      {
+        <li class="list-group-item">
+          <div class="table-responsive-md">
+            <table class="table text-center">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Venue Id</th>
+                  <th>Venue Name</th>
+                  <th>Venue Genre</th>
+                  <th>Venue Hometown</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>@venue.GetVenueId()</th>
+                  <td>@venue.GetVenueName()</td>
+                  <td>@venue.GetVenueGenre()</td>
+                  <td>@venue.GetVenueFrom()</td>
+                  <td>
+                    <a href="/Venues/{id}/Delete">Delete</a>
+                  </td>
+                  <td>
+                    <form class="form-group" action="/Venues/{id}/AddToJoin" method="post">
+                      <label for="addBands">Add a band</label>
+                      <input type="text" name="addBands">
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </li>
+      }
+    </ul>
+  } else {
+    <h5>You haven't entered any venues.</h5>
+    <h5><a class="btn btn-secondary" href="/Venues/CreateForm">Enter a new venue</a></h5>
+    <h5><a class="btn btn-secondary" href="/">Return home</a></h5>
+  }
+
+</div>
