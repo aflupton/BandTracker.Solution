@@ -1,6 +1,6 @@
 # _Band Tracker App_
 
-#### _Band Tracke App, 5/11/18_
+#### _Band Tracker App, 5/11/18_
 
 #### By _**Andrew Lupton**_
 
