@@ -63,5 +63,12 @@ namespace BandTracker.Controllers
       selectedBand.DeleteBand();
       return View("Index", model);
     }
+
+    [HttpPost("/Bands/DeleteAll")]
+    public ActionResult DeleteAll()
+    {
+      Band.DeleteAll();
+      return View("Index");
+    }
   }
 }

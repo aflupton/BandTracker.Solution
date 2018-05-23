@@ -9,3 +9,6 @@ img {
 .card-body {
   background-color: inherit;
 }
+.nav-link {
+  color: darkgrey;
+}

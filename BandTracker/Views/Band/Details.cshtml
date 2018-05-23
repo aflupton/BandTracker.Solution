@@ -2,5 +2,25 @@
 Layout = "_Layout";
 }
 <div class="container-fluid">
-
+  <h2>Band Details</h2>
+  <hr>
+  <div class="row">
+    <div class="col">
+      <h4>@band.GetBandName()</h4>
+        <div class="col">
+          <p>@band.GetBandId()</p>
+          <p>@band.GetBandGenre()</p>
+          <p>@band.GetBandFrom()</p>
+        </div>
+        <div class="col">
+          <div class="row">
+            <div class="col">
+              <a class="btn btn-secondary" href="/Bands/{id}/Delete">Delete</a>
+            </div>
+            <div class="col">
+              <a class="btn btn-secondary" href="/Bands/{id}/Update">Update</a>
+            </div>
+        </div>
+    </div>
+  </div>
 </div>

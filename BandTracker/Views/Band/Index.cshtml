@@ -2,16 +2,19 @@
   Layout = "_Layout";
 }
 <div class="container-fluid">
-  <h2><em>Bands</em></h2>
+  <h2 class="display-4"><em>Bands</em></h2>
   <hr>
   @if(Model.Count != 0)
   {
     <div class="">
-      <a href="/Bands/CreateForm">Create a new entry</a>
-      <a href="/">Home</a>
+      <a class="btn btn-secondary" href="/Bands/CreateForm">Create a new entry</a>
+      <a class="btn btn-secondary" href="/Bands/DeleteAll">Delete All</a>
+      <a class="btn btn-secondary" href="/">Home</a>
+
     </div>
+    <br>
     <ul class="list-group">
-      @foreach(var band in Model["Band"])
+      @foreach(var band in Model)
       {
         <li class="list-group-item">
           <div class="table-responsive-md">
@@ -22,21 +25,23 @@
                   <th>Band Name</th>
                   <th>Band Genre</th>
                   <th>Band Hometown</th>
+                  <th>Add a venue</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <th>@band.GetBandId()</th>
-                  <td>@band.GetBandName()</td>
+                  <td><a class="btn btn-secondary" href="/Bands/@band.GetBandId()">@band.GetBandName()</a></td>
                   <td>@band.GetBandGenre()</td>
                   <td>@band.GetBandFrom()</td>
-                  <td>
-                    <a href="/Bands/{id}/Delete">Delete</a>
-                  </td>
+
+
                   <td>
                     <form class="form-group" action="/Bands/{id}/AddToJoin" method="post">
-                      <label for="addVenue">Add a venue</label>
+                      <label for=""></label>
+                      <label for="addVenue"></label>
                       <input type="text" name="addVenue">
+                      <button class="btn btn-secondary" type="submit" name="button">Enter</button>
                     </form>
                   </td>
                 </tr>
